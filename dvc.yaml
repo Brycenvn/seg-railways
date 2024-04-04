@@ -1,0 +1,99 @@
+params:
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+metrics:
+- results/train/metrics.json
+- results/evaluate/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/evaluate/metrics.json
+plots:
+- results/train/plots/metrics:
+    x: step
+- results/evaluate/plots/metrics:
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/evaluate/plots/images
+artifacts:
+  railway-segmentation:
+    path: models/model.pkl
+    type: model
+    desc: This is a Computer Vision (CV) model that's segmenting out railways from
+      camera images.
+    labels:
+    - cv
+    - segmentation
+    - camera-images
+    - shufflenet_v2_x2_0
+stages:
+  data_split:
+    cmd: python src/data_split.py
+    deps:
+    - data/BRC_2017_railway
+    - src/data_split.py
+    params:
+    - base
+    - data_split
+    outs:
+    - data/test_data
+    - data/train_data
+  train:
+    cmd: python src/train.py
+    deps:
+    - data/train_data
+    - src/train.py
+    params:
+    - base
+    - train
+    outs:
+    - models/model.pkl
+    - models/model.pth
+    - results/train
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - data/test_data
+    - models/model.pkl
+    - src/evaluate.py
+    params:
+    - base
+    - evaluate
+    outs:
+    - results/evaluate
+
+

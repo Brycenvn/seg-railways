@@ -1,0 +1,98 @@
+schema: '2.0'
+stages:
+  data_split:
+    cmd: python src/data_split.py
+    deps:
+    - path: data/BRC_2017_railway
+      hash: md5
+      md5: 3c019225345958476fed4d4346c1df01.dir
+      size: 40605556
+      nfiles: 240
+    - path: src/data_split.py
+      hash: md5
+      md5: 305686a6c951d1e116aebddfe949acdc
+      size: 1082
+    params:
+      params.yaml:
+        base:
+          random_seed: 42
+        data_split:
+          test_regions:
+          - GH011264
+    outs:
+    - path: data/test_data
+      hash: md5
+      md5: 6d75332fc7f87771a1a9745aff7ffd7b.dir
+      size: 11442844
+      nfiles: 30
+    - path: data/train_data
+      hash: md5
+      md5: b5577bcdd5cc5e1b5706f9f1820f44ed.dir
+      size: 29162712
+      nfiles: 210
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/train_data
+      hash: md5
+      md5: b5577bcdd5cc5e1b5706f9f1820f44ed.dir
+      size: 29162712
+      nfiles: 210
+    - path: src/train.py
+      hash: md5
+      md5: d1157343722300cbbf1ca0f16e639dd7
+      size: 2580
+    params:
+      params.yaml:
+        base:
+          random_seed: 42
+        train:
+          valid_pct: 0.1
+          arch: shufflenet_v2_x2_0
+          img_size: 256
+          batch_size: 8
+          fine_tune_args:
+            epochs: 8
+            base_lr: 0.01
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: e86cb6425eabb84d95dae01d6831edb6
+      size: 202749
+    - path: models/model.pth
+      hash: md5
+      md5: 397352f42cc9526630338e18e3764a58
+      size: 164827
+    - path: results/train
+      hash: md5
+      md5: 57ff7fe181f9b7d049e00b75ea7a0abc.dir
+      size: 996
+      nfiles: 5
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/test_data
+      hash: md5
+      md5: 6d75332fc7f87771a1a9745aff7ffd7b.dir
+      size: 11442844
+      nfiles: 30
+    - path: models/model.pkl
+      hash: md5
+      md5: e86cb6425eabb84d95dae01d6831edb6
+      size: 202749
+    - path: src/evaluate.py
+      hash: md5
+      md5: f4e622e810cd0770e1ae3c2d02083fca
+      size: 3606
+    params:
+      params.yaml:
+        base:
+          random_seed: 42
+        evaluate:
+          n_samples_to_save: 10
+    outs:
+    - path: results/evaluate
+      hash: md5
+      md5: 087173b82dd0e511d631830d9fc3404f.dir
+      size: 9043894
+      nfiles: 11
