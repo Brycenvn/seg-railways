@@ -1,0 +1,6 @@
+outs:
+- md5: 3c019225345958476fed4d4346c1df01.dir
+  size: 40605556
+  nfiles: 240
+  hash: md5
+  path: BRC_2017_railway
